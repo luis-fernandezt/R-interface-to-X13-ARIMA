@@ -69,7 +69,7 @@ seas(AirPassengers,
 # Example 5
 seas(AirPassengers,
      x11 = "",
-     arima.model = "([2] 1 0)"
+     arima.model = "([2] 1 0)" 
 )
 
 # Example 6
@@ -93,7 +93,6 @@ seas(list = list(x = AirPassengers, x11 = "")) #with x11
 #Output ####
 m <- seas(AirPassengers)
 series(m, "forecast.forecasts")
-series(m, c("forecast.forecasts", "d1"))
 
 m <- seas(AirPassengers, forecast.save = "forecasts")
 series(m, "forecast.forecasts")
