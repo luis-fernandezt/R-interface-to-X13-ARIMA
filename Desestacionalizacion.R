@@ -58,7 +58,7 @@ IsupSeas <-
        regression.aictest = NULL,
        automdl = NULL,
        
-       arima.model = "(0 1 1)(1 1 1)",
+       arima.model = "(2 1 0)(0 1 1)",
        
        regression.variables = c("ao2010.feb", "ao2010.mar", "AO2019.Nov", "AO2020.Mar", "lpyear"),
        regression.savelog = "aictest",
@@ -106,7 +106,7 @@ summary(IsupSeas)
 fivebestmdl(IsupSeas)
 
 # arima    bic
-# (0 1 1)(1 1 1) -4.779 <- este modelo SARIMA se ajusta mejor
+# (0 1 1)(1 1 1) -4.779 <- este modelo SARIMA se ajusta mejor?
 # (1 1 1)(1 1 1) -4.774
 # (0 1 2)(1 1 1) -4.774
 # (2 1 0)(1 1 1) -4.774
@@ -115,6 +115,16 @@ fivebestmdl(IsupSeas)
 # todas las salidas en html y vista en Shiny*
 out(IsupSeas)
 view(IsupSeas) #recomendado
+
+# OUT
+# spectrum series
+b1 <-  series(IsupSeas, "series.adjoriginal") #serie original
+d10 <- series(IsupSeas, "x11.seasonal") #estacional
+d11 <- series(IsupSeas, "x11.seasadj") #ajustada estacionalmente
+d12 <- series(IsupSeas, "x11.trend") #tendencia-ciclo
+d13 <- series(IsupSeas, "x11.irregular") #irregular
+e11 <- series(IsupSeas, "x11.robustsa") #final estacionalmente robusta
+fct <- series(IsupSeas, "forecast.forecasts") #forecast
 
 par(mfrow = c(1,1))
 # estacional
@@ -145,3 +155,16 @@ plot(IsupSeas)
 grid() 
 legend("topleft", legend = c("Original", "Adjusted"), 
        col = c(1,2), lwd = c(1,2), lty = 1, bty = "n", cex = 0.6)
+
+# Isup, forecast, serie original y ajustada estacionalmente 
+# *series ajustadas difieren levemente de las oficiales*
+ts.plot(b1, d11, fct,
+        gpars= list(col = c(1,2,1,4,4), lwd = c(1,2,2,1,1),
+                    xlab="trimestre", 
+                    ylab="Isup",
+                    lty = c(1,1,1,2,2)))
+
+title("Forecast, Original and Adjusted Series of Isup")
+grid()
+legend("topleft", legend = c("original", "Seasonal", "Forecast", "CI 95%"), 
+       col = c(1,2,1,4,4), lwd = c(1,2,2,1), lty = c(1,1,1,2,2), bty = "n", cex = 0.8)
