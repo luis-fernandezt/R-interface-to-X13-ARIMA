@@ -57,7 +57,7 @@ IsupSeas <-
        regression.aictest = NULL,
        automdl = NULL,
        
-       arima.model = "(2 1 0)(0 1 1)",
+       arima.model = "(0 1 2)(0 1 1)",
        
        regression.variables = c("ao2010.feb", "AO2019.Nov", "AO2020.Mar", "lpyear"),
        regression.savelog = "aictest",
@@ -105,18 +105,6 @@ summary(IsupSeas)
 fivebestmdl(IsupSeas)
 out(IsupSeas)
 #view(IsupSeas) #recomendado
-
-#calendario 
-#Coefficients:         Estimate  Std. Error   z value  Pr(>|z|)    
-#  AO2010.feb        -0.0561000  0.0144032  -3.895     9.82e-05 ***
-#  AO2019.Nov        -0.1329626  0.0159863  -8.317     2e-16 ***
-#  AO2020.Mar         0.1351629  0.0200578   6.739     1.60e-11 ***
-#  Leap Year          0.0295496  0.0069396   4.258     2.06e-05 ***
-#  xreg1             -0.0037454  0.0006174  -6.066     1.31e-09 ***
-#  xreg2              0.0098629  0.0017031   5.791     7.00e-09 ***
-#  AR-Nonseasonal-01 -1.0464050  0.0459566 -22.769     2e-16 ***
-#  AR-Nonseasonal-02 -0.7161415  0.0456221 -15.697     2e-16 ***
-#  MA-Seasonal-12     0.6376575  0.0545975  11.679     2e-16 ***
 
 # OUT
 # spectrum series
@@ -166,16 +154,16 @@ legend("topleft", legend = c("Original", "Adjusted"),
 # *series ajustadas difieren levemente de las oficiales*
 isup.2010.ene = ts(tail(Isup,123), start = c(2010,1), frequency = 12) 
 d11.2010.ene = ts(tail(d11,123), start = c(2010,1), frequency = 12)
+d12.2010.ene = ts(tail(d12,123), start = c(2010,1), frequency = 12)
 
-ts.plot(isup.2010.ene, d11.2010.ene, fct,
-        gpars= list(col = c(1,2,1,4,4), lwd = c(1,2,2,1,1),
+ts.plot(isup.2010.ene, d12.2010.ene, d11.2010.ene, fct, 
+        gpars= list(col = c(1,4,2,1,4,4), lwd = c(1,2,2,2,1,1),
                     xlab="Meses", 
                     ylab="ISUP",
-                    lty = c(1,1,1,2,2)))
+                    lty = c(1,1,1,1,2,2)))
 
-title("Forecast, Original and Adjusted Series of Isup")
+title("Serie Original, Ajustada y Proyecciones del
+Índice de Ventas de Supermercados")
 grid()
-legend("topleft", legend = c("Original", "Seasonal", "Forecast", "CI 95%"), 
-       col = c(1,2,1,4,4), lwd = c(1,2,2,1), lty = c(1,1,1,2,2), bty = "n", cex = 0.8)
-
-
+legend("topleft", legend = c("Original", "Tendencia-Ciclo", "Estacional", "Proyección", "CI 95%"), 
+       col = c(1,4,2,1,4,4), lwd = c(1,2,2,2,1,1), lty = c(1,1,1,1,2,2), bty = "n", cex = 0.8)
