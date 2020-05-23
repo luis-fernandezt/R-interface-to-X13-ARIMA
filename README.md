@@ -39,7 +39,7 @@ Seasonality present at the one percent level.
 |               | Sum of Squares | Degrees of   Freedom | Mean Square | F-value |
 |---------------|:--------------:|:--------------------:|:-----------:|---------|
 | Between Years |     39,9586    |          19          |    2,103    |  0,825  |
-|     Error     |    533,02416   |          209         |   2,55000   |         |
+|     Error     |    533,02416   |          209         |    2,550    |         |
 
 No evidence of moving seasonality at the five percent level.
 
