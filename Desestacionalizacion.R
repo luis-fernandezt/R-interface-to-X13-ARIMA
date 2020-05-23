@@ -9,19 +9,19 @@ download.file("http://www.ine.cl/docs/default-source/ventas-de-supermercados/cua
 library(readxl)
 library(seasonal)
 
-# cargar serie de tiempo isup
-Isup <- read_excel("serie-mensual-empalmada-desestacionalizada-y-tendencia-ciclo-desde-1991-hasta-la-fecha.xls", 
-                   range = "C6:C357")
+# cargar serie de tiempo isup año 
+Isup <- read_excel("./Data/serie-mensual-empalmada-desestacionalizada-y-tendencia-ciclo-desde-1991-hasta-la-fecha.xls", 
+                   range = "C114:C357")
 
 names(Isup) <- c("Isup")
 Isup <- as.data.frame(Isup)
-Isup = ts(Isup, start = c(1991,1), frequency = 12) # transformar df en ts
+Isup = ts(Isup, start = c(2000,1), frequency = 12) # transformar df en ts
 
 # cargar modelo calendario semana completa
 # Elaboración propia, según apartado 3.1.2 Efecto calendario, del "documento-de-trabajo-metodológico-ajuste-estacional-iacm.pdf"
-Sem_Fer <- read_excel("Sem_Fer.xls", range = "B1:H493")
+Sem_Fer <- read_excel("./Data/Sem_Fer4.xlsx", range = "B1:C265") # semana 4/3
 Sem_Fer <- as.data.frame(Sem_Fer)
-Sem_Fer <-  ts(Sem_Fer, start = c(1985,1), frequency = 12)
+Sem_Fer <-  ts(Sem_Fer, start = c(2000,1), frequency = 12)
 
 # Análisis gráfico
 plot(Isup)
@@ -32,13 +32,12 @@ ajuste <- seas(Isup)
 ajuste
 summary(ajuste)
 fivebestmdl(ajuste)
-
-#  arima    bic
-# (2 1 0)(0 1 1) -5.188 <- elegir por recomendacion separata técnica
-# (0 1 1)(0 1 1) -5.185
-# (0 1 2)(0 1 1) -5.182
-# (1 1 1)(0 1 1) -5.180
-# (2 1 1)(0 1 1) -5.172
+# arima    bic
+# (0 1 2)(0 1 1) -5.403
+# (2 1 0)(0 1 1) -5.400 <-  modelo Sarima recomendado
+# (1 1 1)(0 1 1) -5.399
+# (0 1 1)(0 1 1) -5.390
+# (2 1 1)(0 1 1) -5.381
 
 # Ajuste estacional Isup
 IsupSeas <- 
@@ -46,7 +45,7 @@ IsupSeas <-
        series.span = ",2020.3",
        series.decimals = 5,
        series.precision = 5,
-       series.modelspan = "1991.1,2020.3",
+       series.modelspan = "2000.1, 2020.3",
        
        check.print = "all",
        
@@ -60,7 +59,7 @@ IsupSeas <-
        
        arima.model = "(2 1 0)(0 1 1)",
        
-       regression.variables = c("ao2010.feb", "ao2010.mar", "AO2019.Nov", "AO2020.Mar", "lpyear"),
+       regression.variables = c("ao2010.feb", "AO2019.Nov", "AO2020.Mar", "lpyear"),
        regression.savelog = "aictest",
        xreg = Sem_Fer, 
        regression.usertype = "holiday",
@@ -84,8 +83,8 @@ IsupSeas <-
        x11.trendma = 13)
 
 # F2.H:
-# The final I/C Ratio from Table D12: 1.96
-# The final I/S Ratio from Table D10: 3.62
+# The final I/C Ratio from Table D12: 3.77
+# The final I/S Ratio from Table D10: 4.89
 
 # I/C
 # Si I/C es inferior a 1,0, conviene adoptar una media móvil de Henderson de 9 términos.
@@ -100,21 +99,24 @@ IsupSeas <-
 # Si MSR es superior a 7, el componente estacional es fijado de acuerdo con el valor promedio de la serie sin tendencia-ciclo.
 
 # resumen ajuste
-# Donde xreg1 = Lunes, xreg2 = martes,... xreg6 = sabado, xreg7 = feriado.
+# Donde xreg1 = lun-juev, xreg2 = feriado.
 IsupSeas
 summary(IsupSeas)
 fivebestmdl(IsupSeas)
-
-# arima    bic
-# (0 1 1)(1 1 1) -4.779 <- este modelo SARIMA se ajusta mejor?
-# (1 1 1)(1 1 1) -4.774
-# (0 1 2)(1 1 1) -4.774
-# (2 1 0)(1 1 1) -4.774
-# (2 1 1)(1 1 1) -4.760
-
-# todas las salidas en html y vista en Shiny*
 out(IsupSeas)
-view(IsupSeas) #recomendado
+#view(IsupSeas) #recomendado
+
+#calendario 
+#Coefficients:         Estimate  Std. Error   z value  Pr(>|z|)    
+#  AO2010.feb        -0.0561000  0.0144032  -3.895     9.82e-05 ***
+#  AO2019.Nov        -0.1329626  0.0159863  -8.317     2e-16 ***
+#  AO2020.Mar         0.1351629  0.0200578   6.739     1.60e-11 ***
+#  Leap Year          0.0295496  0.0069396   4.258     2.06e-05 ***
+#  xreg1             -0.0037454  0.0006174  -6.066     1.31e-09 ***
+#  xreg2              0.0098629  0.0017031   5.791     7.00e-09 ***
+#  AR-Nonseasonal-01 -1.0464050  0.0459566 -22.769     2e-16 ***
+#  AR-Nonseasonal-02 -0.7161415  0.0456221 -15.697     2e-16 ***
+#  MA-Seasonal-12     0.6376575  0.0545975  11.679     2e-16 ***
 
 # OUT
 # spectrum series
@@ -125,46 +127,55 @@ d12 <- series(IsupSeas, "x11.trend") #tendencia-ciclo
 d13 <- series(IsupSeas, "x11.irregular") #irregular
 e11 <- series(IsupSeas, "x11.robustsa") #final estacionalmente robusta
 fct <- series(IsupSeas, "forecast.forecasts") #forecast
+rsd <- series(IsupSeas, "estimate.residuals") #residuos
 
-par(mfrow = c(1,1))
+# residuos
+plot(density(rsd))
+hist(rsd)
+qqnorm(rsd)
+acf(rsd)
+pacf(rsd)
+
+par(mfrow = c(3,1))
 # estacional
-ts.plot(d10,
-        gpars= list(col='darkred'),
-        lwd = 1.8)
+ts.plot(d10, gpars= list(col='darkred'), lwd = 1.8) 
 title("Estacional")
 
 # tendencia-ciclo
-ts.plot(d12,
-        gpars= list(col='darkblue',
-                    lwd = 1.8))
+ts.plot(d12, gpars= list(col='darkblue', lwd = 1.8))
 title("Tendencia-ciclo")
 
 # irregular
-ts.plot(d13,
-        gpars= list(col='orange',
-                    lwd = 1.8))
+ts.plot(d13, gpars= list(col='orange', lwd = 1.8))
 title("Irregular")
 
+par(mfrow = c(1,1))
 # Seasonal Component, SI Ratio
 monthplot(IsupSeas, col.base = 1)  
 legend("topleft", legend = c("Irregular", "Seasonal", "Seasonal Average"), 
        col = c(4,2,1), lwd = c(1,2,2), lty = 1, bty = "n", cex = 0.6)
 
-#Isup original y ajustado estacionalmente
+par(mfrow = c(1,1))
+#Isup original ajustado y serie ajustada estacionalmente
 plot(IsupSeas)
 grid() 
 legend("topleft", legend = c("Original", "Adjusted"), 
        col = c(1,2), lwd = c(1,2), lty = 1, bty = "n", cex = 0.6)
 
-# Isup, forecast, serie original y ajustada estacionalmente 
+# Isup serie original, forecast y ajustada estacionalmente
 # *series ajustadas difieren levemente de las oficiales*
-ts.plot(b1, d11, fct,
+isup.2010.ene = ts(tail(Isup,123), start = c(2010,1), frequency = 12) 
+d11.2010.ene = ts(tail(d11,123), start = c(2010,1), frequency = 12)
+
+ts.plot(isup.2010.ene, d11.2010.ene, fct,
         gpars= list(col = c(1,2,1,4,4), lwd = c(1,2,2,1,1),
-                    xlab="trimestre", 
-                    ylab="Isup",
+                    xlab="Meses", 
+                    ylab="ISUP",
                     lty = c(1,1,1,2,2)))
 
 title("Forecast, Original and Adjusted Series of Isup")
 grid()
-legend("topleft", legend = c("original", "Seasonal", "Forecast", "CI 95%"), 
+legend("topleft", legend = c("Original", "Seasonal", "Forecast", "CI 95%"), 
        col = c(1,2,1,4,4), lwd = c(1,2,2,1), lty = c(1,1,1,2,2), bty = "n", cex = 0.8)
+
+
