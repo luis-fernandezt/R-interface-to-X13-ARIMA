@@ -89,6 +89,7 @@ Fuente: Elaboración propia.
 Monitoring and Quality Assessment Statistics
 
 |  M1 = | 0,259 |
+|:-----:|:-----:|
 |  M2 = | 0,115 |
 |  M3 = | 0,930 |
 |  M4 = | 0,790 |
