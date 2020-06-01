@@ -11,7 +11,7 @@ library(seasonal)
 
 # cargar serie de tiempo isup año 
 Isup <- read_excel("./Data/serie-mensual-empalmada-desestacionalizada-y-tendencia-ciclo-desde-1991-hasta-la-fecha.xls", 
-                   range = "C114:C357")
+                   range = "C114:C358")
 
 names(Isup) <- c("Isup")
 Isup <- as.data.frame(Isup)
@@ -42,10 +42,10 @@ fivebestmdl(ajuste)
 # Ajuste estacional Isup
 IsupSeas <- 
   seas(x = Isup, 
-       series.span = ",2020.3",
+       series.span = ",2020.4",
        series.decimals = 5,
        series.precision = 5,
-       series.modelspan = "2000.1, 2020.3",
+       series.modelspan = "2000.1, 2020.4",
        
        check.print = "all",
        
@@ -167,3 +167,4 @@ title("Serie Original, Ajustada y Proyecciones del
 grid()
 legend("topleft", legend = c("Original", "Tendencia-Ciclo", "Estacional", "Proyección", "CI 95%"), 
        col = c(1,4,2,1,4,4), lwd = c(1,2,2,2,1,1), lty = c(1,1,1,1,2,2), bty = "n", cex = 0.8)
+
