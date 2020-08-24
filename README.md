@@ -1,4 +1,4 @@
-## **¿Las crisis son buenas para la economía?**
+## **Introducción al proceso de desestacionalización**
 Este ejemplo, describe el proceso de desestacionalización del Índice de Ventas de Supermercados (Isup), mediante la metodología X13 ARIMA SEATS del Census Bureau de Estados Unidos; incorporando en el análisis el efecto calendario chileno, aislando eventos de naturaleza no económica como el terremoto del año 2010, el efecto de la crisis social y la llegada del coronavirus; según la metodología que elabora el Instituto Nacional de Estadísticas de Chile. Para más información revisar [Metodología X13 ARIMA SEATS para el efecto calendario](https://www.ine.cl/inicio/documentos-de-trabajo/documento/desestacionalizaci%C3%B3n-del-%C3%ADndice-de-actividad-del-comercio-al-por-menor-(iacm)-metodolog%C3%ADa-x13-arima-seats-para-el-efecto-calendario).
 
 El procesos de ajuste estacional se realiza enteramente en RStudio, instalando el Package Seasonal R-interface to X-13ARIMA-SEATS para este efecto, disponible en la web [http://www.seasonal.website/seasonal.html](http://www.seasonal.website/seasonal.html).
