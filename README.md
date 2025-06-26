@@ -9,7 +9,7 @@ Este ejemplo describe el proceso de desestacionalización del Índice de Ventas de
 Este trabajo sigue la metodología publicada por el **Instituto Nacional de Estadísticas de Chile (INE)**.  
 Para más información, revisar la metodología en:  
 - [Metodología X13-ARIMA-SEATS](https://www.seasonal.website/seasonal.html)
-- [MetodologÃ­a X13 ARIMA SEATS para el efecto calendario](https://www.ine.cl/inicio/documentos-de-trabajo/documento/desestacionalizaci%C3%B3n-del-%C3%ADndice-de-actividad-del-comercio-al-por-menor-(iacm)-metodolog%C3%ADa-x13-arima-seats-para-el-efecto-calendario).
+- [Metodología X13 ARIMA SEATS para el efecto calendario](https://www.ine.cl/inicio/documentos-de-trabajo/documento/desestacionalizaci%C3%B3n-del-%C3%ADndice-de-actividad-del-comercio-al-por-menor-(iacm)-metodolog%C3%ADa-x13-arima-seats-para-el-efecto-calendario).
 
 ## Implementación en R
 
@@ -123,9 +123,9 @@ Monitoring and Quality Assessment Statistics
 | M10 = | 0,257 |
 | M11 = | 0,237 |
 
-**ACCEPTED** at the level 0,35
+**ACCEPTED** at the level 0,35
 
-Q (without M2) = 0,38 **ACCEPTED**
+Q (without M2) = 0,38 **ACCEPTED**
 
 >Fuente: Elaboración propia.
 ---
